@@ -10,3 +10,8 @@
 * ⏳ **Part 2: Target VMs & Wazuh Agent Deployment** *(Coming Soon)*
 * ⏳ **Part 3: Telemetry Ingestion & KQL Analysis** *(Coming Soon)*
 * ⏳ **Part 4: Hybrid Integration (Azure LAW & Microsoft Sentinel)** *(Coming Soon)*
+
+---
+
+## 🤝 Connect & Follow the Journey
+* **LinkedIn:** [Adrian Decatlo](https://www.linkedin.com/in/adrian-decatlo/))
