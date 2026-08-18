@@ -23,25 +23,25 @@
    Developing KQL skills and using security telemetry to investigate,
    hunt, and identify potential threats.
 
-🎯 Project Objectives
+## 🎯 Project Objectives
 
-This project is designed to provide hands-on experience building and securing an enterprise-style hybrid infrastructure environment while preparing for the Microsoft SC-200 Security Operations Analyst certification.
+This project is designed to provide hands-on experience building and securing an enterprise-style hybrid infrastructure environment while preparing for the **Microsoft SC-200 Security Operations Analyst** certification.
 
-Key areas of development include:
+### Key Areas of Development
 
-Virtualization and infrastructure administration
-Windows Server and Active Directory
-Endpoint administration
-Network security
-Security monitoring
-Endpoint telemetry
-Threat detection
-Threat hunting
-KQL
-Incident investigation
-Microsoft Azure
-Hybrid cloud security
-Microsoft Sentinel
+- Virtualization and infrastructure administration
+- Windows Server and Active Directory
+- Endpoint administration
+- Network security
+- Security monitoring
+- Endpoint telemetry
+- Threat detection
+- Threat hunting
+- KQL
+- Incident investigation
+- Microsoft Azure
+- Hybrid cloud security
+- Microsoft Sentinel
 
 ## 🤝 Connect & Follow the Journey
 I document the development of this project on LinkedIn as the environment evolves.
