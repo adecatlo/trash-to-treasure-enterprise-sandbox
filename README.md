@@ -7,7 +7,7 @@
 * 📖 **[Part 1: Hardware Upgrades & Proxmox VE Foundation](./docs/part-1-hardware-prep.md)** — Rescuing legacy hardware, component upgrades, and hypervisor scoping.
 * 📖 [**Part 2: Infrastructure Expansion, Active Directory & Wazuh**](./docs/part-2-infrastructure-expansion.md) — Adding a second Proxmox node, deploying OPNsense, building the Windows Server 2025 Active Directory environment, deploying a Windows 11 endpoint, and implementing Wazuh agents.
 
-* ⏳ [**Part 3: Azure Arc & Telemetry Ingestion**](./docs/Part-3-Azure-Arc-Telemtry.md)
+* ⏳ [**Part 3: Azure Arc & Telemetry Ingestion**](./docs/Part-3-Azure-Arc-Telemetry.md)
    Connecting the Windows infrastructure to Microsoft Azure through Azure Arc
    and establishing hybrid security telemetry collection.
 
