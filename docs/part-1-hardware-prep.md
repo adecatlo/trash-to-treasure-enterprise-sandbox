@@ -16,7 +16,7 @@ Transforming legacy consumer hardware into a dedicated hypervisor host for secur
 > [!NOTE]
 > Originally, this host was intended to run the entire enterprise sandbox, including a dedicated pfSense instance requiring a dual-port 1Gbit NIC. 
 > 
-> **Resource Assessment:** During testing, compute and RAM constraints meant running pfSense, Wazuh SIEM, and multiple target VMs on a single 16GB node would hit resource bottlenecks. 
+> **Resource Assessment:** During testing, compute and RAM constraints meant running OPNsense, Wazuh SIEM, and multiple target VMs on a single 16GB node would hit resource bottlenecks. 
 > 
 > **Decision:** Saved the dual-port NIC for a standalone firewall node. Re-scoped this Proxmox host exclusively as a dedicated **Security Operations & SIEM Node** hosting an Ubuntu Server VM with Wazuh.
 
