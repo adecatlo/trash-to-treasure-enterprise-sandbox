@@ -266,7 +266,7 @@ _ResourceId
 _SubscriptionId
 ```
 
-Older tutorials may reference fields such as `ProcessName` or `Process` that are not present in the current schema.
+Older SC-200 training examples may not exactly match the current workspace schema. The current SecurityEvent table includes process-related fields such as Process, ProcessName, CommandLine, and ParentProcessName. When practicing KQL, the actual workspace schema takes precedence over older training examples.
 
 When practicing KQL, the actual workspace schema takes precedence over older training examples.
 
