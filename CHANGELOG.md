@@ -71,13 +71,13 @@ It is not intended to record every individual command executed during troublesho
 
 ---
 
-# 2026-08-14
+# 2026-08-15
 
-## KQL / SecurityEvent
+## KQL / Event
 
 ### Verified
 
-* `SecurityEvent` telemetry was successfully queried from the Log Analytics workspace.
+* `Event` telemetry was successfully queried from the Log Analytics workspace.
 * Recent Windows security events were observed.
 * Continued Event ID analysis.
 
@@ -102,7 +102,17 @@ Examples observed during investigation included:
 * Investigated the difference between naturally occurring telemetry and simulated attack activity.
 
 ---
+# 2026-08-14
 
+## Azure Arc / Telemetry
+
+### Completed
+
+* Continued hybrid integration using Azure Arc.
+* Continued Windows endpoint telemetry ingestion into Azure.
+* Used Log Analytics for security event analysis.
+
+---
 # 2026-08-13
 
 ## Windows / Active Directory
@@ -123,18 +133,6 @@ Examples observed during investigation included:
 
 * No definitive evidence was established that the examined Group Policy configuration was responsible for the ping behavior.
 * Troubleshooting remains documented as historical context rather than an active configuration change.
-
----
-
-# 2026-08-16
-
-## Azure Arc / Telemetry
-
-### Completed
-
-* Continued hybrid integration using Azure Arc.
-* Continued Windows endpoint telemetry ingestion into Azure.
-* Used Log Analytics for security event analysis.
 
 ---
 
