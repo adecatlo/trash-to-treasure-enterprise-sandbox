@@ -183,16 +183,24 @@ Completed.
 
 ### Completed
 
-* Windows Server 2025 Evaluation deployment
-* Active Directory Domain Services
-* `TGR.ad.lab` domain
-* Windows 11 Enterprise Evaluation endpoint
-* Wazuh security monitoring
-* Initial enterprise-style lab infrastructure
+* Added a second Proxmox virtualization node using an Amazon Renewed Dell OptiPlex 7060 SFF.
+* Added additional compute, memory, and storage capacity to overcome the resource limitations of the original Proxmox node.
+* Reused the dual-port 1 Gb NIC from the original system in the new Proxmox node.
+* Deployed OPNsense as the network-edge firewall.
+* Deployed Windows Server 2025 Evaluation Edition.
+* Configured Windows Server 2025 as an Active Directory Domain Controller.
+* Configured AD DS, DNS, domain authentication, and Group Policy.
+* Deployed Windows 11 Enterprise Evaluation as a domain-joined endpoint.
+* Continued using Wazuh agents on Windows Server 2025 and Windows 11 for endpoint security monitoring.
+* Connected the Windows infrastructure to Azure using Azure Arc.
+
+### Architectural Outcome
+
+The second Proxmox node became the primary enterprise infrastructure platform while the original Proxmox node remained dedicated to security operations and Wazuh.
 
 ---
 
-## Part 1 — Hardware Upgrades & Proxmox Foundation
+## Part 1 — Hardware Upgrades & Proxmox VE Foundation
 
 ### Status
 
@@ -200,11 +208,24 @@ Completed.
 
 ### Completed
 
-* Dell OptiPlex 7060 SFF hardware foundation
-* Memory/storage expansion
-* Proxmox VE
-* OPNsense network edge
-* Initial virtualization environment
+* Upgraded an HP Slimline Desktop from an Intel Pentium G2020 to an Intel Core i7-3770.
+* Increased memory from 4 GB to 16 GB DDR3.
+* Replaced a failing 3.5-inch hard drive with a 500 GB SSD.
+* Installed Proxmox VE as the Type-1 hypervisor.
+* Initially intended the system to host the entire enterprise security sandbox.
+* Evaluated the resource requirements of running OPNsense, Wazuh, and multiple target VMs on a single 16 GB node.
+* Identified compute and memory constraints that would limit the planned architecture.
+
+### Architectural Pivot
+
+The original design was re-scoped after resource testing showed that running the firewall, Wazuh SIEM, and multiple target systems on the same 16 GB node would create resource bottlenecks.
+
+The dual-port 1 Gb NIC was retained for use in a future standalone firewall configuration.
+
+The original Proxmox node was subsequently designated as the dedicated **Security Operations / SIEM Node**, hosting an Ubuntu Server VM running Wazuh.
+
+This resource-driven architectural pivot led to the addition of the second Proxmox node documented in Part 2.
+
 
 ---
 
