@@ -26,19 +26,59 @@ The environment is intentionally smaller than a production enterprise environmen
 
 ---
 
-# 2. Physical Infrastructure
+2. Physical Infrastructure
 
-## Proxmox Host
+The lab currently consists of two Proxmox virtualization nodes with different roles.
 
-| Component          | Current State              |
-| ------------------ | -------------------------- |
-| System             | Dell OptiPlex 7060 SFF     |
-| CPU                | Intel Core i7-8700         |
-| RAM                | 32 GB                      |
-| Primary Storage    | 500 GB NVMe                |
-| Additional Storage | 1 TB NVMe via PCIe adapter |
-| Hypervisor         | Proxmox VE                 |
-| Status             | Completed                  |
+Proxmox Node #1 — Security Operations / SIEM Node
+Component	Current State
+Chassis	HP Slimline Desktop
+CPU	Intel Core i7-3770
+Original CPU	Intel Pentium G2020
+RAM	16 GB DDR3
+Original RAM	4 GB
+Storage	500 GB SSD
+Hypervisor	Proxmox VE
+Primary Role	Security Operations / SIEM
+Status	Operational
+Purpose
+
+This node was originally intended to host the entire enterprise sandbox.
+
+Resource constraints demonstrated that running OPNsense, Wazuh, and multiple target VMs on a single 16 GB system would create resource bottlenecks.
+
+The architecture was therefore re-scoped.
+
+The node now serves primarily as the dedicated Security Operations / SIEM node.
+
+Virtual Infrastructure
+
+The primary documented workload on this node is:
+
+Ubuntu Server VM
+Wazuh
+Wazuh management/SIEM functionality
+Proxmox Node #2 — Enterprise Infrastructure Node
+Component	Current State
+Chassis	Dell OptiPlex 7060 SFF
+CPU	Intel Core i7-8700
+RAM	32 GB
+Primary Storage	500 GB NVMe
+Additional Storage	1 TB NVMe via PCIe adapter
+Network	Dual-port 1 Gb NIC
+Hypervisor	Proxmox VE
+Primary Role	Enterprise Infrastructure
+Status	Operational
+
+The dual-port NIC originally acquired for the first system was reused in this node.
+
+Virtual Infrastructure
+
+This node currently hosts:
+
+OPNsense
+Windows Server 2025
+Windows 11 Enterprise
 
 ---
 
@@ -104,23 +144,36 @@ Kali is part of the training workflow but is not the primary Proxmox enterprise 
 
 ---
 
-# 5. Wazuh
+5. Wazuh
 
-Wazuh is part of the lab's security monitoring stack.
+Wazuh is hosted separately from the Windows/OPNsense infrastructure.
 
-Primary purpose:
+Wazuh Host
+Property	State
+Proxmox Node	Node #1 — HP Slimline
+Guest OS	Ubuntu Server
+Security Platform	Wazuh
+Role	SIEM / endpoint security monitoring
+Status	Implemented / In Use
 
-* Endpoint monitoring
-* Security telemetry
-* SIEM practice
-* Comparison with Microsoft security tooling
+Wazuh agents have been installed on:
 
-Status:
+Windows Server 2025
+Windows 11 Enterprise
 
-**Implemented / In use**
+The purpose of the Wazuh deployment is to provide practical experience with:
 
-Do not assume every planned Wazuh capability is configured unless separately documented.
+Windows security events
+Authentication activity
+Endpoint events
+Security alerts
+Log analysis
+Detection concepts
+Investigation workflows
 
+Wazuh is intentionally maintained as a separate security-monitoring platform from the Microsoft security stack.
+
+This allows the lab to compare and work with multiple security monitoring technologies rather than relying exclusively on Microsoft tooling.
 ---
 
 # 6. Azure Infrastructure
@@ -185,7 +238,6 @@ Observed event counts have varied over time and should not be treated as permane
 
 # 8. Current SecurityEvent Schema Notes
 
-The current workspace does not necessarily match older SC-200/KQL training material.
 
 Observed fields include:
 
@@ -217,6 +269,8 @@ _SubscriptionId
 Older tutorials may reference fields such as `ProcessName` or `Process` that are not present in the current schema.
 
 When practicing KQL, the actual workspace schema takes precedence over older training examples.
+
+SecurityEvent schema verified on 2026-08-22; detailed field inventory maintained in docs/telemetry/SECURITYEVENT_SCHEMA.md
 
 ---
 
