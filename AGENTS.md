@@ -1,5 +1,11 @@
 # AGENTS.md
 
+## Scope and Authority
+
+This file is the governing instruction file for all work performed in this repository. It defines documentation authority, state handling, verification requirements, change-management expectations, Git restrictions, live-infrastructure authorization, and security rules.
+
+If another repository document conflicts with these instructions, identify the conflict rather than silently choosing a source or rewriting the conflicting material.
+
 ## Purpose
 
 This repository documents and manages a personal cybersecurity enterprise sandbox used for:
@@ -32,12 +38,14 @@ Before making recommendations or changing documentation:
    * **Completed**
    * **In Progress**
    * **Planned**
-   * **Broken / Needs Investigation**
-   * **Removed / Replaced**
+   * **Needs Verification**
+   * **Broken**
+   * **Removed**
 3. Do not represent planned work as completed.
 4. Do not assume that a service is configured merely because it exists in the Azure portal.
 5. Do not assume telemetry is working merely because an agent or connector is installed.
-6. When uncertain, mark the state as `Needs Verification` rather than guessing.
+6. When evidence is insufficient, mark the state as `Needs Verification` rather than guessing.
+7. Identify conflicts between documents rather than silently resolving them.
 
 ---
 
@@ -64,89 +72,112 @@ Avoid unnecessary production-scale architecture.
 
 ## Current Lab Architecture
 
-The physical virtualization host is a Dell OptiPlex 7060 SFF with:
+Do not maintain a duplicate current-architecture snapshot in this instruction file. The exact current architecture and state of every lab component must be taken from `LAB_STATE.md`.
 
-* Intel Core i7-8700
-* 32 GB RAM
-* 500 GB NVMe
-* Additional 1 TB NVMe SSD
-* Proxmox VE
-
-The network edge uses OPNsense.
-
-Primary virtual infrastructure includes:
-
-* Windows Server 2025 Evaluation Edition
-
-  * Active Directory Domain Services
-  * Domain Controller
-  * Domain: `TGR.ad.lab`
-* Windows 11 Enterprise Evaluation
-
-  * Security telemetry target
-  * Azure Arc connected
-* Wazuh
-
-  * Security monitoring/SIEM component
-* Kali Linux
-
-  * Training/security tooling environment
-  * Running separately from the Proxmox lab on the user's laptop through VirtualBox
-
-Azure/Microsoft security infrastructure includes:
-
-* Azure Log Analytics Workspace: `TGR-SC200-LAW`
-* Azure Arc
-* Microsoft Sentinel
-* Microsoft Defender-related services
-* Microsoft Entra services
-* Microsoft 365 E5 trial
-* Defender CSPM components
-
-The exact current state of each component must be taken from `LAB_STATE.md`.
+If another document describes a different architecture, determine whether it is a historical phase narrative, clearly outdated current-state documentation, or a true unresolved conflict. Preserve historical context and report unresolved conflicts.
 
 ---
 
-## Documentation Hierarchy
+## Document Roles and Authority
 
-Use the repository documentation in this order:
+### `LAB_STATE.md` — Current Verified State
 
-1. `LAB_STATE.md`
+`LAB_STATE.md` is the authoritative source for the lab's current verified state. Current architecture, operational status, integrations, telemetry, and component state must be taken from this file.
 
-   * Current truth
-2. `CHANGELOG.md`
+Do not copy a claim into `LAB_STATE.md` merely because it appears in another document. A current-state claim requires sufficient verification under the verification rules below.
 
-   * Historical changes
-3. `README.md`
+### `CHANGELOG.md` — Chronological History
 
-   * Human-readable project narrative
-4. Other documentation
+`CHANGELOG.md` preserves dated, chronological records of meaningful verified changes, failures, reversals, and architectural decisions. It must not be treated as the current-state authority.
 
-   * Detailed implementation notes, tutorials, screenshots, queries, etc.
+Historical entries should not be rewritten merely because the lab later changed. Corrections should be explicit and preserve the original chronology.
 
-The README may describe the project roadmap, but it must not override the actual state recorded in `LAB_STATE.md`.
+### `README.md` — Public-Facing Overview
+
+`README.md` is the public-facing project overview. It should explain the lab's purpose, architecture at a high level, major milestones, and links to supporting documentation.
+
+It may summarize current state, but it must not override `LAB_STATE.md`. Avoid detailed operational claims in the README when they cannot be kept current or safely published.
+
+### Phase Documents Under `docs/` — Historical Phase Narrative
+
+Phase documents preserve the state, decisions, learning process, and narrative of their respective phases. They are historical records, not competing current-state authorities.
+
+Do not silently rewrite a phase document to make its historical status, next steps, or decisions match the current lab. If clarification is needed, prefer an explicit dated note, retrospective annotation, or link to `LAB_STATE.md` while preserving the original narrative.
+
+Detailed reference documents under `docs/` that are intended to describe current configuration should clearly say so and include a verification or update date.
 
 ---
 
-## Change Management
+## Documentation Conflicts
 
-Whenever a meaningful lab configuration change is made:
+When documents disagree:
 
-1. Make the change.
-2. Verify the change.
-3. Update `LAB_STATE.md`.
-4. Add an entry to `CHANGELOG.md`.
-5. Update the README only when the project narrative or milestone status has materially changed.
+1. Identify the exact conflicting claims and their locations.
+2. Determine whether the difference reflects historical progression, stale current-state documentation, missing evidence, or a true unresolved contradiction.
+3. Use `LAB_STATE.md` for current verified state, but do not silently rewrite another document.
+4. If the authoritative state itself is unclear, mark the matter **Needs Verification**.
+5. Ask for confirmation when available evidence cannot resolve a material contradiction.
+6. Preserve useful historical context when documenting the resolution.
 
-Do not update documentation merely because a command was attempted.
+---
 
-Documentation should describe successful, verified changes.
+## Documentation Change Management
+
+When verified lab changes are being documented, consider whether both of the following require updates:
+
+* `LAB_STATE.md`, if the change affects current verified state.
+* `CHANGELOG.md`, if the change is historically meaningful.
+
+Update `README.md` only when the public overview, architecture summary, or milestone presentation materially changes.
+
+Do not automatically rewrite phase documents to reflect later state. Preserve their historical narrative.
+
+Do not update current-state documentation merely because a command was attempted, a resource was created, or an intended configuration was described. Record only what the available evidence supports.
+
+If a requested documentation update lacks sufficient evidence, use **Needs Verification** rather than presenting the claim as verified.
+
+Before changing documentation:
+
+1. Read `LAB_STATE.md`.
+2. Read the relevant `CHANGELOG.md` entries.
+3. Read the affected public, phase, or reference documentation.
+4. Identify whether each material claim is current, historical, planned, or unverified.
+5. Report material conflicts and assumptions.
+
+After making changes, summarize what changed and why. When a commit is requested, provide that summary for review before committing unless the user explicitly directs otherwise.
 
 ---
 
 ## Verification Standard
 
 A configuration should be considered **Completed** only when there is evidence that it works.
+
+Use these evidence categories:
+
+**User-verified fact**
+
+* An explicit current observation or test result reported by the user.
+* May be documented as verified state when the user clearly identifies what was observed or tested and the result.
+* Record the verification date and the reported evidence when available.
+* Do not broaden the claim beyond what the user actually observed.
+
+**Agent-verified fact**
+
+* A current observation or test result directly inspected by the agent through authorized read-only checks or an explicitly authorized test.
+* Record the verification method, date, and result when useful.
+
+**Inference**
+
+* A conclusion suggested by available information but not directly observed or tested.
+* Must be identified as an inference and must not be recorded as verified state.
+
+**Needs Verification**
+
+* The configuration may exist or a claim may be plausible, but neither a qualifying user-verified fact nor agent-verified evidence establishes the current result.
+
+Installation, resource existence, licensing, configuration attempts, portal presence, or unsupported claims in another document are not sufficient by themselves to establish **Completed** status.
+
+Evidence may include successful queries, service or agent health, portal visibility, configuration output, event timestamps, test results, screenshots, or other reproducible observations appropriate to the component.
 
 Examples:
 
@@ -183,6 +214,18 @@ Verify:
 ### Defender
 
 Do not mark Defender for Endpoint/XDR functionality as completed until the endpoint enrollment, sensor/agent state, telemetry, and portal visibility have been verified.
+
+---
+
+## Live Infrastructure Authorization
+
+Repository access, documentation review, and permission to edit repository files do not authorize changes to live lab infrastructure.
+
+Do not make changes to Azure, Microsoft 365, Microsoft Entra, Defender, Sentinel, Proxmox, OPNsense, Active Directory, endpoints, virtual machines, networking, agents, connectors, cloud resources, or any other live lab system unless the user explicitly requests the live-infrastructure change.
+
+Authorization to document, recommend, review, or troubleshoot a change is not authorization to implement it. Read-only inspection may be used when it is within the user's request and available authorization, but any action that changes live state requires an explicit request.
+
+Live-infrastructure authorization does not imply authorization to make unrelated changes. Keep all actions within the exact requested scope, explain material risk or cost, prefer reversible changes, and verify the result.
 
 ---
 
@@ -240,18 +283,21 @@ The Log Analytics workspace has previously shown measurable ingestion, so ingest
 
 ---
 
-## Security and Credentials
+## Sensitive Information and Public Documentation
 
-Never place the following in repository files:
+Never place credentials or sensitive values in repository documentation or other tracked files. This includes:
 
 * Passwords
 * API keys
-* Access tokens
+* Access or refresh tokens
 * Client secrets
 * Private keys
 * Recovery codes
-* Connection strings containing credentials
-* Personal account secrets
+* Session identifiers
+* Authentication cookies
+* Credential-bearing connection strings
+* Personal account secrets or unnecessary personal information
+* Infrastructure, account, tenant, subscription, resource, host, or network details when disclosure would create a security or privacy risk
 
 Use placeholders when documenting commands.
 
@@ -264,6 +310,29 @@ Example:
 ```
 
 Never commit `.env` files containing secrets.
+
+Treat `README.md` and portfolio-oriented documentation as public by default. Check examples, screenshots, commands, output, queries, and logs for secrets or unnecessarily sensitive identifiers before adding them.
+
+If sensitive material is discovered, do not reproduce it in summaries or patches. Identify its location and recommend appropriate remediation without exposing the value.
+
+---
+
+## Git Operations
+
+Do not create commits, amend commits, push branches, publish tags, open pull requests, or otherwise publish Git changes unless the user explicitly requests the specific action.
+
+Permission to edit repository files does not imply permission to commit or push them.
+
+Before any requested commit:
+
+1. Show or summarize the proposed changes for the user's review.
+2. Identify the files changed.
+3. Report relevant validation performed.
+4. Surface unresolved conflicts, assumptions, or **Needs Verification** items.
+
+Do not include unrelated existing user changes in a commit.
+
+Never use destructive Git operations to discard work unless the user explicitly requests them and the exact scope has been confirmed.
 
 ---
 
@@ -289,6 +358,8 @@ Do not repeatedly change unrelated settings without establishing which layer is 
 ## Lab Phases
 
 The project has evolved through several major phases.
+
+This section defines the stable purpose of each phase. Current phase status must be taken from `LAB_STATE.md`; historical phase documents under `docs/` must retain their original narrative.
 
 ### Part 1 — Hardware and Proxmox Foundation
 
@@ -355,33 +426,36 @@ Focus areas include:
 
 ## AI Agent Behavior
 
-An AI agent working in this repository should behave as a lab operator/documentarian, not as an autonomous production administrator.
+An AI agent working in this repository should behave as a careful lab documentarian and an operator only when the user has explicitly authorized the requested operation. Repository work does not grant authority to administer live infrastructure.
 
 The agent should:
 
 * Read the current state before proposing changes.
 * Explain why a change is necessary.
 * Prefer reversible changes.
+* Obtain explicit authorization before live-infrastructure changes.
 * Ask before destructive actions.
 * Record important changes.
-* Distinguish observed facts from assumptions.
+* Distinguish user-verified facts, agent-verified facts, inference, and **Needs Verification**.
 * Preserve existing working configuration.
 * Avoid unnecessary Azure resources.
 * Avoid repeating completed setup steps.
 * Use the existing naming conventions.
 * Keep documentation synchronized.
+* Identify material conflicts rather than silently resolving them.
+* Stay within the user's requested scope.
 
-When the user says something has been completed, update the state only after enough evidence exists to document what was actually completed.
+An explicit current observation or test result reported by the user may be treated as a user-verified fact. Document only the state established by that report and do not infer broader completion.
 
 ---
 
 ## State Labels
 
-Use these labels consistently:
+Use these labels consistently for current-state documentation. Do not substitute ambiguous terms such as “implemented,” “deployed,” “active,” or “operational” without mapping them to one of these labels or explaining exactly what was verified.
 
 **Completed**
 
-* Implemented and verified.
+* Implemented and verified through a qualifying user-verified fact or agent-verified fact.
 
 **In Progress**
 
@@ -393,7 +467,7 @@ Use these labels consistently:
 
 **Needs Verification**
 
-* Configuration may exist, but there is insufficient evidence that it works.
+* Configuration may exist, but there is insufficient evidence to establish the current result.
 
 **Broken**
 
@@ -403,13 +477,17 @@ Use these labels consistently:
 
 * Previously implemented but intentionally removed.
 
+Do not move an item to **Completed** solely because configuration steps were attempted.
+
 ---
 
 ## Do Not Guess
 
 If information is unavailable, say:
 
-> Needs verification.
+> Needs Verification.
+
+Do not convert an inference into verified state. When relying on a user-verified fact, attribute the observation appropriately and do not extend it beyond the reported test or result.
 
 Do not fabricate:
 
