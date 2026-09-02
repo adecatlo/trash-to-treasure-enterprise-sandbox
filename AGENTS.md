@@ -229,6 +229,142 @@ Live-infrastructure authorization does not imply authorization to make unrelated
 
 ---
 
+## Azure CLI and Infrastructure-as-Code Safety
+
+Azure CLI, Azure PowerShell, Bicep, Terraform, or other infrastructure tooling may be used to inspect or manage the lab only within the authorization boundaries defined in this file.
+
+### Default Azure Access
+
+Azure operations are **read-only by default**.
+
+Repository access, terminal access, Azure authentication, and authorization to modify infrastructure are separate permissions. Access to one does not imply permission for another.
+
+Before performing Azure inspection or administration:
+
+1. Run `az account show`.
+2. Confirm the active Azure subscription and tenant context.
+3. Do not switch subscriptions or tenants without explicit user approval.
+4. Keep operations within the user's requested scope.
+
+Read-only inspection commands may be used when they are relevant to the user's request and do not alter live state.
+
+### Azure Changes Require Explicit Approval
+
+Do not execute an Azure operation that creates, modifies, deletes, deploys, enables, disables, onboards, offboards, assigns permissions, changes data collection, or otherwise alters live state unless the user explicitly approves that operation.
+
+This includes changes involving:
+
+* Resource groups
+* Azure Arc
+* Azure Monitor Agent
+* Data Collection Rules
+* Log Analytics workspaces
+* Microsoft Sentinel
+* Microsoft Defender products
+* Microsoft Entra ID
+* RBAC assignments
+* Policies
+* Networking
+* Virtual machines
+* Extensions
+* Diagnostic settings
+* Connectors
+* Analytics or detection rules
+* Telemetry collection
+
+Authorization for one Azure change does not authorize additional related changes.
+
+Before an authorized change, explain the expected effect, material security implications, likely cost implications, and rollback path when applicable.
+
+### Infrastructure as Code
+
+Infrastructure-as-Code files may be written or modified without authorization to deploy them, provided the requested repository work itself is authorized.
+
+Creating or editing Bicep, Terraform, ARM templates, scripts, or deployment commands does not grant permission to execute them against Azure.
+
+For Bicep or ARM deployments:
+
+* Prefer validation before deployment.
+* Use Azure deployment `what-if` before an authorized deployment when supported.
+* Review the proposed changes before applying them.
+* Do not proceed when `what-if` reveals unexpected resource changes.
+
+For Terraform:
+
+* Review `terraform plan` before an authorized apply.
+* Do not run `terraform apply` or `terraform destroy` without explicit approval.
+* Treat Terraform state files as potentially sensitive and do not commit them unless the repository has an intentional, secure state-management design.
+
+### Azure Credentials and Local Artifacts
+
+Never commit Azure authentication material or local Azure CLI state.
+
+Do not add the following to Git:
+
+* Azure CLI authentication caches
+* Access tokens
+* Refresh tokens
+* Service-principal credentials
+* Client secrets
+* Certificates containing private keys
+* `.env` files containing credentials
+* Terraform state files containing sensitive infrastructure data
+* Exported portal or CLI output containing sensitive identifiers or credentials
+
+Authentication should use supported Azure authentication mechanisms rather than credentials stored in repository files.
+
+### Public Repository Sanitization
+
+Treat this repository as publicly readable.
+
+Before committing Azure-derived documentation, command output, screenshots, scripts, configuration, or examples, review them for information that should not be publicly disclosed.
+
+Sanitize or replace with placeholders when appropriate:
+
+* Subscription IDs
+* Tenant IDs
+* User email addresses
+* Object IDs
+* Client IDs
+* Resource IDs
+* Sensitive hostnames
+* Public or private IP addresses when disclosure is unnecessary
+* Internal domain or infrastructure details when disclosure would create unnecessary risk
+* Authentication or session information
+
+Do not sanitize information in a way that makes technical documentation misleading. Preserve the technical meaning while removing unnecessary identifying values.
+
+### Azure Cost Control
+
+Any operation that can materially increase Azure consumption requires cost consideration before execution.
+
+Examples include:
+
+* Enabling additional telemetry
+* Expanding Data Collection Rules
+* Increasing Log Analytics ingestion
+* Increasing retention
+* Enabling additional Defender capabilities
+* Creating continuously running resources
+* Deploying additional compute
+* Enabling services with consumption-based pricing
+
+Before such a change, identify the likely source of cost and obtain explicit user approval for the live change.
+
+### Verification After Authorized Changes
+
+An Azure command completing successfully does not by itself establish that the intended configuration works.
+
+After an authorized Azure change:
+
+1. Verify the resulting Azure resource state.
+2. Verify the intended functional result when practical.
+3. Verify telemetry or security functionality separately when relevant.
+4. Record only what the evidence establishes.
+5. Update `LAB_STATE.md` and `CHANGELOG.md` only when the documentation rules in this file justify doing so.
+
+---
+
 ## KQL Rules
 
 KQL is a major purpose of this lab.
