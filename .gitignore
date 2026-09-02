@@ -1,0 +1,29 @@
+# Environment and secret files
+.env
+.env.*
+!.env.example
+
+# Azure CLI / authentication artifacts
+.azure/
+
+# Terraform local state and working files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+
+# Local development / editor files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Temporary and backup files
+*.tmp
+*.bak
+*.swp
+*~
