@@ -233,6 +233,14 @@ Live-infrastructure authorization does not imply authorization to make unrelated
 
 Azure CLI, Azure PowerShell, Bicep, Terraform, or other infrastructure tooling may be used to inspect or manage the lab only within the authorization boundaries defined in this file.
 
+## Work Authentication Authorization
+
+Work must not initiate, complete, or reuse authentication to Azure, Microsoft 365, Microsoft Defender, or other external services unless the user has explicitly authorized access for the current session or task.
+
+The presence of credentials, tokens, cached authentication, an authenticated browser session, or other available authentication material does not constitute authorization.
+
+Work access is intended to be on-demand rather than persistent. Authorization for one session or task must not be interpreted as authorization for future access.
+
 ### Default Azure Access
 
 Azure operations are **read-only by default**.
