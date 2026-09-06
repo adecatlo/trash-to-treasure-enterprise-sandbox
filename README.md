@@ -11,17 +11,17 @@
    Connecting the Windows infrastructure to Microsoft Azure through Azure Arc
    and establishing hybrid security telemetry collection.
 
-* ⏳ Part 4: Microsoft Defender XDR & Defender for Cloud
-   Deploying Microsoft security solutions for endpoint and cloud security
-   monitoring.
+* ✅ **Part 4: Microsoft Defender XDR & Defender for Cloud** — Deployed and integrated Microsoft security capabilities including MDE, MDI, Defender XDR, Defender for Cloud, and Defender for Cloud Apps lab access.
 
-* ⏳ Part 5: Microsoft Sentinel Integration & Security Operations
-   Integrating Sentinel with Microsoft security services and developing
-   security operations workflows.
+* ✅ **Part 5: Microsoft Sentinel Integration & Security Operations** — Integrated Microsoft Sentinel with Defender XDR and expanded the lab toward cross-domain security operations.
+
+* 🛣️ [Pit Stop: Defender XDR, Sentinel, and the AI Detour](docs/Defender-XDR-Sentinel-and-the-AI-Detour.md) — MDE deployment lessons, Sentinel/XDR integration, home-lab cost considerations, and an experiment in least-privilege AI access to Defender.
 
 * ⏳ Part 6: KQL Analysis & Threat Hunting
    Developing KQL skills and using security telemetry to investigate,
    hunt, and identify potential threats.
+
+  The roadmap represents the direction of the lab, not a rigid implementation sequence. Like any good road trip, some of the most useful learning has come from unplanned pit stops along the way.
 
 ## 🎯 Project Objectives
 
