@@ -129,6 +129,10 @@ The identity was given specifically selected application permissions for read-on
 - security baseline assessment information
 - threat intelligence indicators
 
+![Work-SOC-Reader read-only API permissions](images/work-soc-reader-api-permissions.png)
+
+*Figure: Work-SOC-Reader uses application-level read permissions for selected Defender capabilities. No write permissions are granted.*
+
 The important part was not simply making the API calls work.
 
 I wanted the authorization boundary to remain understandable.
