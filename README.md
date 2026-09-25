@@ -22,7 +22,6 @@
     Defender incident/alert integration.
 
 * 🛫 [Pit Stop: Defender XDR, Sentinel, and the AI Detour](docs/Defender-XDR-Sentinel-and-the-AI-Detour.md) — MDE deployment lessons, Sentinel/XDR integration, home-lab cost considerations, and an experiment in least-privilege AI access to Defender.
-=======
 
 * ⏳ Part 6: KQL Analysis & Threat Hunting
    Developing KQL skills and using security telemetry to investigate,
