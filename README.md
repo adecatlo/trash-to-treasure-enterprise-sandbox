@@ -11,7 +11,7 @@
    Connecting TGR-ADDS, TGR-BBaggins, and gandalf-the-white through Azure Arc
    and establishing hybrid security telemetry collection.
 
-* ✅ Part 4: Microsoft Defender XDR & Defender for Cloud
+* ⏳ Part 4: Microsoft Defender XDR & Defender for Cloud
     Building verified device and identity visibility with Defender for Identity
     and XDR-to-Sentinel integration while broader endpoint and cloud-security
     capabilities remain in progress.
