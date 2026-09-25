@@ -2,7 +2,7 @@
 
 > **Purpose:** Current authoritative state of the cybersecurity enterprise sandbox.
 >
-> **Last Updated:** 2026-08-22
+> **Last Updated:** 2026-09-24
 >
 > **Important:** This document records the state that has actually been built or verified. Planned work must not be represented as completed.
 
@@ -26,59 +26,60 @@ The environment is intentionally smaller than a production enterprise environmen
 
 ---
 
-2. Physical Infrastructure
+# 2. Physical Infrastructure
 
 The lab currently consists of two Proxmox virtualization nodes with different roles.
 
-Proxmox Node #1 — Security Operations / SIEM Node
-Component	Current State
-Chassis	HP Slimline Desktop
-CPU	Intel Core i7-3770
-Original CPU	Intel Pentium G2020
-RAM	16 GB DDR3
-Original RAM	4 GB
-Storage	500 GB SSD
-Hypervisor	Proxmox VE
-Primary Role	Security Operations / SIEM
-Status	Operational
-Purpose
+## Proxmox Node 1 — Secondary Security / Lab Compute
 
-This node was originally intended to host the entire enterprise sandbox.
+| Component | Current State |
+| --- | --- |
+| Host/display name | `Wazuh-host` |
+| Chassis | HP Slimline Desktop |
+| CPU | Intel Core i7-3770 |
+| Original CPU | Intel Pentium G2020 |
+| RAM | 16 GB DDR3 |
+| Original RAM | 4 GB |
+| Storage | 500 GB SSD |
+| Hypervisor | Proxmox VE |
+| Current role | Secondary security and controlled-test compute |
+| Status | Operational |
 
-Resource constraints demonstrated that running OPNsense, Wazuh, and multiple target VMs on a single 16 GB system would create resource bottlenecks.
+This node was originally intended to host the entire enterprise sandbox. Resource testing showed that running OPNsense, Wazuh, and multiple target VMs on one 16 GB system would create resource bottlenecks, so the architecture was re-scoped.
 
-The architecture was therefore re-scoped.
+The node is no longer described solely as an actively running Wazuh/SIEM node. It currently preserves the Wazuh platform while also hosting the Kali attack/test system used for controlled security exercises.
 
-The node now serves primarily as the dedicated Security Operations / SIEM node.
+| VM ID | Proxmox display name | Guest identity | Current role/state |
+| --- | --- | --- | --- |
+| 100 | `ubuntu-siem` | Ubuntu Server / Wazuh | Wazuh VM retained; currently powered off/idle while the learning focus is the Microsoft security stack. |
+| 101 | `Kali-Attack-Box` | Sauron / `eye-of-sauron` | Controlled attack/test machine; used for exercises including SSH failed-password testing against gandalf-the-white. |
 
-Virtual Infrastructure
+## Proxmox Node 2 — Primary Enterprise Infrastructure
 
-The primary documented workload on this node is:
-
-Ubuntu Server VM
-Wazuh
-Wazuh management/SIEM functionality
-Proxmox Node #2 — Enterprise Infrastructure Node
-Component	Current State
-Chassis	Dell OptiPlex 7060 SFF
-CPU	Intel Core i7-8700
-RAM	32 GB
-Primary Storage	500 GB NVMe
-Additional Storage	1 TB NVMe via PCIe adapter
-Network	Dual-port 1 Gb NIC
-Hypervisor	Proxmox VE
-Primary Role	Enterprise Infrastructure
-Status	Operational
+| Component | Current State |
+| --- | --- |
+| Chassis | Dell OptiPlex 7060 SFF |
+| CPU | Intel Core i7-8700 |
+| RAM | 32 GB |
+| Primary storage | 500 GB NVMe |
+| Additional storage | 1 TB NVMe via PCIe adapter |
+| Network | Dual-port 1 Gb NIC |
+| Hypervisor | Proxmox VE |
+| Current role | Primary enterprise infrastructure |
+| Status | Operational |
 
 The dual-port NIC originally acquired for the first system was reused in this node.
 
-Virtual Infrastructure
+Current verified VM inventory:
 
-This node currently hosts:
+| VM ID | Proxmox display name | Guest identity/hostname | Role |
+| --- | --- | --- | --- |
+| 100 | `OPNsense` | OPNsense | Firewall/router |
+| 101 | `TGR-ADDC2025` | `TGR-ADDS` | Windows Server 2025 domain controller |
+| 102 | `Azure-VM` | `TGR-BBaggins` | Windows 11 Enterprise endpoint |
+| 103 | `TGR-Linux-VM` | `gandalf-the-white` | Ubuntu/Linux security endpoint |
 
-OPNsense
-Windows Server 2025
-Windows 11 Enterprise
+Proxmox display names and guest hostnames are intentionally recorded separately; they are not interchangeable resource names.
 
 ---
 
@@ -104,13 +105,15 @@ Do not assume that an inability to ping a host indicates that the host or networ
 
 ## Windows Server 2025
 
-| Property | State                              |
-| -------- | ---------------------------------- |
-| OS       | Windows Server 2025 Evaluation     |
-| Role     | Active Directory Domain Controller |
-| AD DS    | Completed                          |
-| Domain   | `TGR.ad.lab`                       |
-| Status   | Operational                        |
+| Property | State |
+| --- | --- |
+| Proxmox display name | `TGR-ADDC2025` |
+| Guest hostname | `TGR-ADDS` |
+| OS | Windows Server 2025 Evaluation |
+| Role | Active Directory Domain Controller |
+| AD DS | Completed |
+| Domain | `TGR.ad.lab` |
+| Status | Operational |
 
 The server is part of the lab's identity infrastructure.
 
@@ -118,62 +121,70 @@ The server is part of the lab's identity infrastructure.
 
 ## Windows 11 Enterprise
 
-| Property           | State                            |
-| ------------------ | -------------------------------- |
-| OS                 | Windows 11 Enterprise Evaluation |
-| Role               | Endpoint / telemetry target      |
-| Azure Arc          | Installed                        |
-| Security telemetry | Configured/in use                |
-| Status             | Operational                      |
+| Property | State |
+| --- | --- |
+| Proxmox display name | `Azure-VM` |
+| Guest hostname | `TGR-BBaggins` |
+| OS | Windows 11 Enterprise Evaluation |
+| Role | Endpoint / telemetry target |
+| Azure Arc | Connected |
+| Security telemetry | Verified through Windows Security Events via AMA |
+| Status | Operational |
 
 The Windows 11 VM is used as a primary endpoint for security monitoring and SC-200 practice.
 
 ---
 
-## Kali Linux
+## Ubuntu / Linux Security Endpoint
 
-Kali Linux is used for security training and course exercises.
-
-Current training environment:
-
-* Kali Linux Rolling 2026.2
-* Running through VirtualBox on the laptop
-* Network mode previously configured as Bridged
-
-Kali is part of the training workflow but is not the primary Proxmox enterprise infrastructure.
+| Property | State |
+| --- | --- |
+| Proxmox display name | `TGR-Linux-VM` |
+| Guest hostname | `gandalf-the-white` |
+| OS | Ubuntu 24.04.3 LTS |
+| Role | Linux security telemetry target |
+| Azure Arc | Connected |
+| Syslog via AMA | Completed / verified |
+| Defender device inventory | Present / verified |
+| Status | Operational |
 
 ---
 
-5. Wazuh
+## Kali Linux
+
+Kali is the lab's controlled attack/test system.
+
+| Property | State |
+| --- | --- |
+| Proxmox node | `Wazuh-host` |
+| VM ID | 101 |
+| Proxmox display name | `Kali-Attack-Box` |
+| Guest identity | Sauron / `eye-of-sauron` |
+| Role | Controlled attack and telemetry-generation system |
+| Status | Operational for controlled exercises |
+
+The Kali VM has been used to generate controlled security activity, including SSH failed-password testing against gandalf-the-white. The earlier VirtualBox-based Kali environment is historical context and is not the current primary Kali architecture.
+
+---
+
+# 5. Wazuh
 
 Wazuh is hosted separately from the Windows/OPNsense infrastructure.
 
-Wazuh Host
-Property	State
-Proxmox Node	Node #1 — HP Slimline
-Guest OS	Ubuntu Server
-Security Platform	Wazuh
-Role	SIEM / endpoint security monitoring
-Status	Implemented / In Use
+| Property | State |
+| --- | --- |
+| Proxmox node | Node 1 — `Wazuh-host` |
+| VM ID / display name | 100 / `ubuntu-siem` |
+| Guest OS | Ubuntu Server |
+| Security platform | Wazuh |
+| Role | SIEM / endpoint security monitoring platform retained for lab use |
+| Current state | Powered off / idle |
 
-Wazuh agents have been installed on:
+Wazuh has not been removed or abandoned. Its VM and prior deployment are retained, but it is not currently the active learning focus; current work is centered on the Microsoft security stack.
 
-Windows Server 2025
-Windows 11 Enterprise
+Historically, Wazuh agents were installed on the Windows Server 2025 and Windows 11 systems for Windows security-event, authentication, endpoint, alert, log-analysis, detection, and investigation practice.
 
-The purpose of the Wazuh deployment is to provide practical experience with:
-
-Windows security events
-Authentication activity
-Endpoint events
-Security alerts
-Log analysis
-Detection concepts
-Investigation workflows
-
-Wazuh is intentionally maintained as a separate security-monitoring platform from the Microsoft security stack.
-
-This allows the lab to compare and work with multiple security monitoring technologies rather than relying exclusively on Microsoft tooling.
+Wazuh remains available as a separate security-monitoring platform for future comparison with Microsoft tooling.
 ---
 
 # 6. Azure Infrastructure
@@ -193,18 +204,17 @@ The workspace is actively receiving security telemetry.
 
 ## Azure Arc
 
-Azure Arc has been installed on the Windows endpoint infrastructure.
+Azure Arc is implemented across the three current monitored servers/endpoints.
 
-Purpose:
+| Azure Arc machine | Operating system | Arc agent status | Resource group | Monitoring extension |
+| --- | --- | --- | --- | --- |
+| `gandalf-the-white` | Ubuntu 24.04.3 LTS | Connected | `TGR-SecurityLab-RG` | Installed |
+| `TGR-ADDS` | Windows Server 2025 | Connected | `TGR-SecurityLab-RG` | Installed |
+| `TGR-BBaggins` | Windows 11 Enterprise | Connected | `TGR-SecurityLab-RG` | Installed |
 
-* Hybrid Azure integration
-* Azure management
-* Security/monitoring integration
-* Foundation for Microsoft security tooling
+**Status: Completed / verified**
 
-Status:
-
-**Implemented**
+The Azure Arc view verifies connection and extension state. Its Defender-extension column is not, by itself, evidence of Microsoft Defender for Endpoint onboarding; Defender device presence is recorded separately below from the Microsoft Defender inventory.
 
 ---
 
@@ -233,6 +243,21 @@ The lab has successfully observed Windows security events including, among other
 * 5058 — Key file operation
 
 Observed event counts have varied over time and should not be treated as permanent state.
+
+## September 2026 Collection State
+
+The current collection state is based on the supplied portal and query evidence:
+
+| Component | State | Evidence |
+| --- | --- | --- |
+| Windows Security Events via AMA | **Completed** | `TGR-ADDS` and `TGR-BBaggins` use separate DCRs and have verified `SecurityEvent` ingestion. |
+| `TGR-ADDS` event scope | **Completed** | `TGR-ADDS-Security-DCR` remains associated with the Azure Arc resource and uses custom XPath filters containing a deliberately curated set of Security Event IDs. A 30-day query returned 5,613 records, with the most recent event on September 24, 2026 local time / September 25 UTC. |
+| `TGR-BBaggins` event scope | **Completed** | The Windows 11 endpoint uses the Common event collection scope. Recreating its DCR association restored `SecurityEvent` ingestion. |
+| DCR synchronization root cause | **Needs Verification** | Recreating the association restored ingestion, but the proposed synchronization explanation remains a working hypothesis. |
+| Azure Activity ingestion | **Completed** | A successful `AzureActivity` query returned Azure control-plane records, including SecurityInsights data-connector operations, policy actions, Logic App/connection writes, and role-assignment writes. |
+| Linux Syslog via AMA | **Completed** | A successful `Syslog` query returned `sshd` events from `gandalf-the-white`, including controlled failed-password activity generated from Sauron. The telemetry was parsed with KQL, investigated, and used with a Microsoft Sentinel SSH brute-force analytics rule. |
+
+Detailed narrative: `docs/part-5-sentinel-integration-security-operations.md`.
 
 ---
 
@@ -267,8 +292,6 @@ _SubscriptionId
 ```
 
 Older SC-200 training examples may not exactly match the current workspace schema. The current SecurityEvent table includes process-related fields such as Process, ProcessName, CommandLine, and ParentProcessName. When practicing KQL, the actual workspace schema takes precedence over older training examples.
-
-When practicing KQL, the actual workspace schema takes precedence over older training examples.
 
 SecurityEvent schema verified on 2026-08-22; detailed field inventory maintained in docs/telemetry/SECURITYEVENT_SCHEMA.md
 
@@ -307,6 +330,21 @@ SecurityEvent
 | order by Count desc
 ```
 
+### Linux SSH investigation
+
+The verified Linux Syslog workflow included:
+
+* Querying `sshd` events from `gandalf-the-white` in the `Syslog` table.
+* Isolating controlled failed-password activity generated from Sauron.
+* Parsing `SyslogMessage` with KQL to extract investigation fields such as source address, source port, target account, and event type.
+* Using the resulting telemetry during investigation and with a Microsoft Sentinel SSH brute-force analytics rule.
+
+### Azure control-plane activity
+
+An `AzureActivity` query successfully returned control-plane records in the Sentinel workspace. The observed operations included SecurityInsights data-connector activity, policy actions, Logic App/connection writes, and role-assignment writes.
+
+Controlled telemetry generation is documented separately from naturally occurring activity so that a successful lab exercise is not mistaken for an uncontrolled attack.
+
 KQL should be treated as an investigation skill rather than simply a collection of memorized queries.
 
 ---
@@ -321,8 +359,12 @@ Microsoft Sentinel has been activated using the Log Analytics workspace.
 | Workspace                    | `TGR-SC200-LAW`             |
 | Telemetry available          | Yes                         |
 | KQL queries                  | Working                     |
+| Windows events via AMA       | Completed                   |
+| Azure Activity ingestion     | Completed / verified        |
+| Linux Syslog ingestion       | Completed / verified        |
 | Analytics/detection practice | In progress                 |
-| Defender integration         | In progress                 |
+| SSH brute-force analytic use | Completed / exercised       |
+| Defender XDR integration     | Connected / verified        |
 | Status                       | Active training environment |
 
 Sentinel should be treated as an active learning environment rather than a production SIEM.
@@ -331,22 +373,18 @@ Sentinel should be treated as an active learning environment rather than a produ
 
 # 11. Microsoft Defender
 
-Microsoft Defender services are part of the current/future security stack.
+The current Microsoft Defender evidence supports the following scoped state:
 
-The lab has explored:
+| Component | State | Verified evidence and limitation |
+| --- | --- | --- |
+| Defender device inventory | **Completed / verified** | The portal inventory contains three devices: `gandalf-the-white` (Linux server), `tgr-bbaggins.tgr.ad.lab` (Windows 11 workstation), and `tgr-adds.tgr.ad.lab` (Windows Server). Inventory presence does not prove every endpoint capability or data table. |
+| Microsoft Defender for Identity | **Operational / verified** | `TGR-ADDS` is shown as an onboarded domain controller with server status Running and sensor status Up to date. The portal reports 100% coverage, all domain controllers activated and onboarded, and all sensors healthy and up to date. |
+| Defender identity inventory | **Populated / verified** | The inventory contains both on-premises Active Directory identities and cloud/Entra identities. Sensitive identifiers are intentionally omitted here. |
+| Defender XDR to Sentinel connector | **Connected / verified** | The Sentinel connector is Connected and shows recent data. For the displayed period it shows 8 incidents and 2 alerts, with data visible for `SecurityIncident` and `SecurityAlert`. |
+| Defender for Cloud / CSPM | **In Progress / Needs Verification** | The supplied evidence does not establish the current operational state of these services. |
+| Broader endpoint/XDR capabilities | **Needs Verification** | Device inventory presence and connector status do not establish every sensor capability, advanced-hunting table, prevention setting, or response function. |
 
-* Microsoft Defender XDR
-* Microsoft Defender for Endpoint
-* Microsoft Defender for Cloud
-* Defender CSPM
-* Defender alerts
-* Defender/Sentinel integration
-
-Current state:
-
-**In Progress / Needs Verification**
-
-Do not mark endpoint onboarding or full XDR integration as completed until the endpoint and portal telemetry have been verified.
+The XDR connector view does not show verified data for the listed `Device*` tables, so those tables are not represented as active here.
 
 ---
 
@@ -372,7 +410,7 @@ Azure cost is an explicit lab concern.
 
 Log Analytics ingestion has been monitored.
 
-A recent observation showed approximately:
+A 2026-08-19 observation showed approximately:
 
 **430 MB of ingestion over the previous 7 days**
 
@@ -431,6 +469,14 @@ This distinction should be preserved:
 
 **Available telemetry ≠ simulated attack activity.**
 
+The later Linux SSH exercise was a distinct controlled simulation: Sauron generated failed-password activity against `gandalf-the-white`, the resulting `sshd` events were verified in `Syslog`, and the telemetry was used for investigation and an SSH brute-force analytics rule.
+
+---
+
+## Windows Endpoint DCR Association
+
+Recreating the `TGR-BBaggins` DCR association restored `SecurityEvent` ingestion. That recovery is verified. The explanation that the prior association or AMA configuration failed to synchronize a modified DCR remains a working hypothesis and is **Needs Verification**.
+
 ---
 
 # 15. Project Milestones
@@ -480,27 +526,29 @@ Includes:
 
 **Status: In Progress**
 
-Focus:
+Verified subset:
 
-* Defender XDR
-* Defender for Endpoint
-* Defender for Cloud
-* Endpoint telemetry
-* Alert investigation
+* Three-device Defender inventory
+* Operational Microsoft Defender for Identity sensor on `TGR-ADDS`
+* Populated identity inventory
+* Connected Defender XDR-to-Sentinel connector with `SecurityIncident` and `SecurityAlert` data
+
+Remaining work includes validating broader endpoint/XDR capabilities and the current Defender for Cloud/CSPM state.
 
 ---
 
 ## Part 5 — Sentinel Integration
 
-**Status: In Progress**
+**Status: Completed**
 
-Focus:
+Includes:
 
-* Sentinel configuration
-* Connectors
-* Analytics rules
-* Incidents
-* Defender integration
+* Sentinel workspace and connector configuration
+* Windows Security Events via AMA for `TGR-BBaggins` and `TGR-ADDS`
+* Curated/custom domain-controller collection and Common endpoint collection
+* Verified Azure Activity and Linux Syslog ingestion
+* Controlled SSH telemetry generation, KQL investigation, and SSH brute-force analytics-rule use
+* Verified Defender XDR-to-Sentinel connection and incident/alert data
 
 ---
 
@@ -525,14 +573,10 @@ Focus:
 
 The next objectives should be completed in a controlled sequence rather than all at once.
 
-* [ ] Verify Microsoft Defender XDR configuration
-* [ ] Verify Defender for Endpoint availability and endpoint onboarding
-* [ ] Verify endpoint telemetry in the Defender portal
 * [ ] Continue Defender for Cloud configuration where useful
-* [ ] Connect relevant Defender telemetry to Sentinel
-* [ ] Build/test Sentinel analytics rules
-* [ ] Generate or safely simulate useful security events
-* [ ] Investigate resulting alerts/incidents
+* [ ] Continue building and testing additional Sentinel analytics rules
+* [ ] Continue safe simulations for specific learning and detection goals
+* [ ] Continue investigating alerts and incidents
 * [ ] Continue SC-200-oriented KQL practice
 * [ ] Document each verified milestone
 * [ ] Monitor Azure ingestion/cost impact

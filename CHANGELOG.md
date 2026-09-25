@@ -8,6 +8,67 @@ It is not intended to record every individual command executed during troublesho
 
 ---
 
+# 2026-09-24
+
+## Microsoft Sentinel / Telemetry
+
+### Documented
+
+* Recorded the migration of the domain controller and Windows 11 endpoint to Windows Security Events via AMA with separate DCRs.
+* Recorded the cost-conscious tuning of domain-controller and endpoint event collection.
+* Recorded that recreating the Windows endpoint's DCR association restored `SecurityEvent` ingestion without reinstalling AMA or changing the Log Analytics workspace.
+* Preserved the DCR synchronization explanation as a working hypothesis rather than a verified root cause.
+* Recorded the Azure Activity policy, remediation, managed-identity, and workspace-routing configuration as **Needs Verification** pending successful data-arrival evidence.
+* Recorded Linux Syslog via AMA as **Needs Verification** pending a successful `Syslog` query.
+* Recorded that correcting the relevant IPv6 prefix and routing configuration restored Linux outbound connectivity and AMA operation.
+
+## Documentation
+
+### Added
+
+* Added `docs/part-5-sentinel-integration-security-operations.md` as the durable technical record for the Sentinel data-collection and troubleshooting work summarized in the September LinkedIn updates.
+* Linked Part 5 from the public README roadmap.
+
+## Current-State Reconciliation and Subsequent Verification
+
+### Telemetry Verified
+
+* Verified Azure Activity ingestion with a successful `AzureActivity` query in `TGR-SC200-LAW` returning Azure control-plane operations. The Microsoft Sentinel Azure Activity connector was also observed in Connected state with recent data. This supersedes the earlier **Needs Verification** status for current-state purposes while preserving that earlier documentation state above.
+* Verified Syslog ingestion from `gandalf-the-white` through AMA with successful `Syslog` queries. Controlled SSH failed-password activity generated from the Kali/Sauron attack system was observed, parsed, investigated, and used during Microsoft Sentinel SSH brute-force analytics-rule testing. This supersedes the earlier **Needs Verification** status for current-state purposes while preserving that earlier documentation state above.
+* Verified that `TGR-BBaggins` uses Windows Security Events via AMA with the Common collection scope.
+* Verified that `TGR-ADDS` remains associated with `TGR-ADDS-Security-DCR`, which uses curated custom XPath Security Event filters. A current 30-day query returned 5,613 `SecurityEvent` records for `TGR-ADDS`, confirming active ingestion.
+* Retained the proposed `TGR-BBaggins` DCR synchronization explanation as a working hypothesis; recreating the association restored ingestion, but the root cause remains **Needs Verification**.
+
+### Azure Arc and Defender Verified
+
+* Reconciled the current Azure Arc inventory: `TGR-ADDS`, `TGR-BBaggins`, and `gandalf-the-white` were all observed in Connected state with the monitoring extension installed. This records the current verified inventory and does not assign a common onboarding date to the three machines.
+* Verified that Defender Device Inventory contains `TGR-ADDS`, `TGR-BBaggins`, and `gandalf-the-white`.
+* Verified that Microsoft Defender for Identity on `TGR-ADDS` is onboarded, running, healthy, and up to date, with 100% lab coverage shown.
+* Verified that the Defender identity inventory contains both on-premises Active Directory and Entra identities.
+* Verified that the Microsoft Defender XDR connector for Sentinel is Connected and has received `SecurityIncident` and `SecurityAlert` data. This does not establish every Defender/XDR capability or every `Device*` data type.
+
+### Architecture Reconciled
+
+* Recorded that the original Wazuh VM remains retained on the original Proxmox node but is currently powered off/idle.
+* Recorded Kali as Proxmox VM 101, display name `Kali-Attack-Box`, on the original node. Its Sauron / `eye-of-sauron` guest identity serves as the controlled attack system.
+* Reconciled the primary Proxmox node as hosting OPNsense, the Windows Server domain controller, the Windows 11 endpoint, and the Linux endpoint, while preserving the distinction between Proxmox display names and guest hostnames.
+
+### Documentation Reconciled
+
+* Completed a full current-state reconciliation of `LAB_STATE.md` on 2026-09-24.
+* Recorded Part 5 as Completed/documented. Parts 4 and 6 remain In Progress.
+
+### Remaining Needs Verification
+
+* Root cause of the `TGR-BBaggins` DCR synchronization problem.
+* Defender for Cloud/CSPM operational state.
+* Broader Defender/XDR capabilities beyond the collected evidence.
+* Availability and current use of additional XDR `Device*` data types in Sentinel.
+* Current licensing/trial state.
+* Current ingestion and cost state.
+
+---
+
 # 2026-08-22
 
 ## Documentation
